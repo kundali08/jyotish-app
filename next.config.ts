@@ -17,10 +17,8 @@ const nextConfig: NextConfig = {
 
   // Force Vercel to include the swisseph C binary and ephemeris files
   // in the Serverless Function bundle, since it can't auto-detect C file reads.
-  experimental: {
-    outputFileTracingIncludes: {
-      '/api/calculate': ['./node_modules/swisseph/**/*'],
-    },
+  outputFileTracingIncludes: {
+    '/api/calculate': ['./node_modules/swisseph/**/*'],
   },
 };
 
