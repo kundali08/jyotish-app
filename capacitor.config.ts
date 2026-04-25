@@ -37,7 +37,7 @@ const config: CapacitorConfig = {
 
     // ── PRODUCTION ───────────────────────────────────────────────────────────
     // Once deployed, swap the line above for your real domain:
-    // url: "https://jyotish.yourdomain.com",
+    url: "https://jyotish-app-latest.vercel.app",
 
     androidScheme: "https",
 
