@@ -12,23 +12,8 @@ const nextConfig: NextConfig = {
   // Disable source maps in production to cut memory usage by ~40-50%
   productionBrowserSourceMaps: false,
 
-  // Webpack memory optimisations
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Limit parallelism so webpack doesn't spin up too many workers at once
-      config.parallelism = 1;
-
-      // Use filesystem cache to avoid re-processing unchanged modules
-      config.cache = {
-        type: "filesystem",
-        buildDependencies: {
-          config: [__filename],
-        },
-      };
-    }
-
-    return config;
-  },
+  // Silence Next.js 16 Turbopack error when using custom webpack config
+  turbopack: {},
 };
 
 export default nextConfig;
