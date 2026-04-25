@@ -42,6 +42,7 @@ jobs:
 
       - name: Initialize Capacitor Android Project
         run: |
+          mkdir -p out
           npx cap add android
           npx cap sync android
 
