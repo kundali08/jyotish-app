@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
 
   // Silence Next.js 16 Turbopack error when using custom webpack config
   turbopack: {},
+
+  // Force Vercel to include the swisseph C binary and ephemeris files
+  // in the Serverless Function bundle, since it can't auto-detect C file reads.
+  experimental: {
+    outputFileTracingIncludes: {
+      '/api/calculate': ['./node_modules/swisseph/**/*'],
+    },
+  },
 };
 
 export default nextConfig;
