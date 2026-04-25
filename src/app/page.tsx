@@ -1,63 +1,99 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState, useEffect } from 'react';
+import Header from '@/components/ui/Header';
+import BirthDataForm from '@/components/input/BirthDataForm';
+import SavedProfilesList from '@/components/profile/SavedProfilesList';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
+
+export default function HomePage() {
+  const { locale } = useLanguage();
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen pb-12">
+      <Header />
+
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        {/* PWA Install Banner */}
+        {deferredPrompt && (
+          <div className="bg-gradient-to-r from-amber-600/20 to-orange-600/20 border border-amber-500/50 rounded-xl p-4 mb-8 flex items-center justify-between shadow-lg">
+            <div className="flex items-center gap-4">
+              <span className="text-3xl">📱</span>
+              <div>
+                <h4 className="font-bold text-amber-400">{locale === 'ne' ? 'एप इन्स्टल गर्नुहोस्' : 'Install App'}</h4>
+                <p className="text-sm text-white/70">{locale === 'ne' ? 'छिटो पहुँचको लागि होम स्क्रिनमा थप्नुहोस्' : 'Add to home screen for quick access'}</p>
+              </div>
+            </div>
+            <button onClick={handleInstallClick} className="px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-lg whitespace-nowrap shadow-lg">
+              {locale === 'ne' ? 'इन्स्टल' : 'Install'}
+            </button>
+          </div>
+        )}
+
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-glow" style={{ color: 'var(--gold-500)' }}>
+            {locale === 'ne' ? 'जन्मकुण्डली' : 'Janma Kundali'}
+          </h2>
+          <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+            {locale === 'ne'
+              ? 'शास्त्रीय पाराशरी ज्योतिष अनुसार सम्पूर्ण जन्मकुण्डली विश्लेषण'
+              : 'Complete birth chart analysis following classical Parashari Jyotish (BPHS)'}
           </p>
+
+          {/* Sacred geometry decorative line */}
+          <div className="flex items-center justify-center gap-2 mt-6 mb-8">
+            <div className="h-px w-16" style={{ background: 'linear-gradient(to right, transparent, var(--gold-500))' }}></div>
+            <span style={{ color: 'var(--saffron-500)' }}>☸</span>
+            <div className="h-px w-16" style={{ background: 'linear-gradient(to left, transparent, var(--gold-500))' }}></div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Birth Data Form Card */}
+        <div className="glass-card glow-gold p-6 md:p-8 max-w-2xl mx-auto">
+          <h3 className="text-xl font-semibold mb-6 text-center" style={{ color: 'var(--gold-400)' }}>
+            {locale === 'ne' ? '🪷 जन्म विवरण प्रविष्ट गर्नुहोस्' : '🪷 Enter Birth Details'}
+          </h3>
+          <BirthDataForm />
+        </div>
+
+        {/* Saved Profiles Section */}
+        <div className="mt-8">
+          <SavedProfilesList />
+        </div>
+
+        {/* Features Preview */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
+          {[
+            { icon: '🪐', label: locale === 'ne' ? 'ग्रहस्पष्ट' : 'Graha Spashta' },
+            { icon: '📐', label: locale === 'ne' ? 'षोडशवर्ग' : '16 Vargas' },
+            { icon: '⏳', label: locale === 'ne' ? 'विंशोत्तरी दशा' : 'Vimshottari Dasha' },
+            { icon: '🔮', label: locale === 'ne' ? 'योग विश्लेषण' : 'Yoga Analysis' },
+          ].map((item, i) => (
+            <div key={i} className="glass-card text-center p-4">
+              <span className="text-2xl block mb-2">{item.icon}</span>
+              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item.label}</span>
+            </div>
+          ))}
         </div>
       </main>
     </div>
